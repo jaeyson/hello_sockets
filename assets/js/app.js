@@ -1,6 +1,13 @@
 // If you want to use Phoenix channels, run `mix help phx.gen.channel`
 // to get started and then uncomment the line below.
-// import "./user_socket.js"
+import "./user_socket.js"
+
+// To summarize, a WS connection follows a request flow:
+// 1. Init GET http(s) request to WS endpoint
+// 2. either receive 101 or error
+// 3. upgrade the protocol to WS if 101 received
+// 4. send/receive frames over WS
+// NOTE: connection cant be upgraded with curl
 
 // You can include dependencies in two ways.
 //
