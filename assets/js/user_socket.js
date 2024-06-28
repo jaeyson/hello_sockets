@@ -2,11 +2,11 @@
 // you uncomment its entry in "assets/js/app.js".
 
 // Bring in Phoenix channels client library:
-import {Socket} from "phoenix"
+import { Socket } from "phoenix"
 
 // And connect to the path in "lib/hello_sockets_web/endpoint.ex". We pass the
 // token for authentication. Read below how it should be used.
-let socket = new Socket("/socket", {params: {token: window.userToken}})
+let socket = new Socket("/socket", { params: { token: window.userToken } })
 
 // When you connect, you'll often need to authenticate the client.
 // For example, imagine you have an authentication plug, `MyAuth`,
@@ -56,9 +56,28 @@ socket.connect()
 // Now that you are connected, you can join channels with a topic.
 // Let's assume you have a channel with a topic named `room` and the
 // subtopic is its id - in this case 42:
-let channel = socket.channel("room:42", {})
+let channel = socket.channel("ping:wild", {})
 channel.join()
-  .receive("ok", resp => { console.log("Joined successfully", resp) })
-  .receive("error", resp => { console.log("Unable to join", resp) })
+  .receive("ok", resp => {
+    console.log("Joined successfully", resp)
+    channel.on("send_ping", payload => {
+      console.log("ping requested", payload)
+      channel.push("ping", { ack_phrase: "pong" })
+        .receive("ok", resp => console.log("ping:", resp))
+    })
+  //   console.log("send ping")
+  //   channel.push("ping", { ack_phrase: "pong" })
+  //     .receive("ok", resp => {
+  //       console.info("receive", resp)
+  //     })
+  //     .receive("error", resp => { console.error("Unable to join", resp) })
+  //     .receive("timeout", resp => { console.error("message timeout", resp) })
 
+  //   channel.push("param_ping", { error: true })
+  //     .receive("error", resp => { console.error("param ping error:", resp) })
+
+  //   channel.push("param_ping", { error: false, arr: [1, 2] })
+  //     .receive("error", resp => { console.error("param ping ok:", resp) })
+  })
+  .receive("error", resp => { console.error("Unable to join", resp) })
 export default socket

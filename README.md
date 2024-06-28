@@ -16,3 +16,15 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
   * Docs: https://hexdocs.pm/phoenix
   * Forum: https://elixirforum.com/c/phoenix-forum
   * Source: https://github.com/phoenixframework/phoenix
+
+```bash
+wscat -c 'ws://localhost:4000/socket/websocket?vsn=2.0.0'
+```
+
+```elixir
+# [join ref, msg ref, topic, event, payload]
+["1","1","ping","phx_join",{}]
+
+# [join ref, msg ref, topic, event, payload]
+["1","1","ping:wild","ping",{"ack_phrase": "wit"}]
+```

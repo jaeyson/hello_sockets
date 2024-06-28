@@ -6,6 +6,9 @@ defmodule HelloSocketsWeb.UserSocket do
   # It's possible to control the websocket connection and
   # assign values that can be accessed by your channel topics.
 
+  channel "ping:*", HelloSocketsWeb.PingChannel
+  channel "wild:*", HelloSocketsWeb.WildcardChannel
+
   ## Channels
   # Uncomment the following line to define a "room:*" topic
   # pointing to the `HelloSocketsWeb.RoomChannel`:
