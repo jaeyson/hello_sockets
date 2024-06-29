@@ -60,7 +60,6 @@ defmodule HelloSocketsWeb.PingChannel do
 
   @impl true
   def handle_out("request_ping", payload, socket) do
-    IO.inspect("hi")
     payload = Map.put(payload, "from_node", Node.self())
     push(socket, "send_ping", payload)
     {:noreply, socket}
