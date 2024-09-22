@@ -11,6 +11,10 @@ defmodule HelloSocketsWeb.Endpoint do
     same_site: "Lax"
   ]
 
+  socket "/auth_socket", HelloSocketsWeb.AuthSocket,
+    websocket: true,
+    longpoll: false
+
   socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
 
   socket "/socket", HelloSocketsWeb.UserSocket,
