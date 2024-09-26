@@ -6,6 +6,10 @@ defmodule HelloSocketsWeb.AuthSocket do
   channel "ping", HelloSocketsWeb.PingChannel
   channel "tracked", HelloSocketsWeb.TrackedChannel
 
+  def id(%{assigns: %{user_id: user_id}}) do
+    "auth_socket: #{user_id}"
+  end
+
   def connect(%{"token" => token}, socket) do
     case verify(socket, token) do
       {:ok, user_id} ->
