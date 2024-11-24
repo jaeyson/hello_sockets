@@ -1,10 +1,13 @@
 defmodule HelloSocketsWeb.AuthSocket do
   use Phoenix.Socket
+
   require Logger
+
   @day_to_seconds 86_400
 
   channel "ping", HelloSocketsWeb.PingChannel
-  channel "tracked", HelloSocketsWeb.TrackedChannel
+  # channel "tracked", HelloSocketsWeb.TrackedChannel
+  channel "user:*", HelloSocketsWeb.AuthChannel
 
   def id(%{assigns: %{user_id: user_id}}) do
     "auth_socket: #{user_id}"

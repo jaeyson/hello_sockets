@@ -33,19 +33,28 @@ defmodule HelloSocketsWeb.PingChannel do
     {:reply, {:ok, %{ping: phrase}}, socket}
   end
 
+  @impl true
+  def handle_in("ping", _payload, socket) do
+    {:reply, {:ok, %{ping: "blank"}}, socket}
+  end
+
+  @impl true
   # We only handle ping
   def handle_in("pong", _payload, socket) do
     {:noreply, socket}
   end
 
+  @impl true
   def handle_in("param_ping", %{"error" => true}, socket) do
     {:reply, {:error, %{reason: "you asked for this!"}}, socket}
   end
 
+  @impl true
   def handle_in("param_ping", payload, socket) do
     {:reply, {:ok, payload}, socket}
   end
 
+  @impl true
   def handle_in("ding", _payload, socket) do
     {:stop, :shutdown, {:ok, %{msg: "shutting down"}}, socket}
   end
