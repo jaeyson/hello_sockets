@@ -1,5 +1,8 @@
 defmodule HelloSocketsWeb.PingChannel do
   use HelloSocketsWeb, :channel
+
+  require Logger
+
   intercept ["request_ping"]
 
   @impl true
@@ -36,6 +39,11 @@ defmodule HelloSocketsWeb.PingChannel do
   @impl true
   def handle_in("ping", _payload, socket) do
     {:reply, {:ok, %{ping: "blank"}}, socket}
+  end
+
+  @impl true
+  def handle_in("test_event", payload, socket) do
+    {:reply, {:ok, %{payload: payload}}, socket}
   end
 
   @impl true

@@ -5,9 +5,9 @@ defmodule HelloSocketsWeb.AuthSocket do
 
   @day_to_seconds 86_400
 
-  channel "ping", HelloSocketsWeb.PingChannel
+  # channel "ping:*", HelloSocketsWeb.PingChannel
   # channel "tracked", HelloSocketsWeb.TrackedChannel
-  channel "user:*", HelloSocketsWeb.AuthChannel
+  # channel "user:*", HelloSocketsWeb.AuthChannel
 
   def id(%{assigns: %{user_id: user_id}}) do
     "auth_socket: #{user_id}"
