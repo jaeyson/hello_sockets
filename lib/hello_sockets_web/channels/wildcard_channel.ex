@@ -17,6 +17,14 @@ defmodule HelloSocketsWeb.WildcardChannel do
     {:reply, {:ok, %{ping: "pong"}}, socket}
   end
 
+  # It is also common to receive messages from the client and
+  # broadcast to everyone in the current topic (wildcard:lobby).
+  @impl true
+  def handle_in("shout", payload, socket) do
+    broadcast(socket, "shout", payload)
+    {:noreply, socket}
+  end
+
   defp numbers_correct?(numbers) do
     numbers
     |> String.split(":")
@@ -27,16 +35,8 @@ defmodule HelloSocketsWeb.WildcardChannel do
     end
   end
 
-  # It is also common to receive messages from the client and
-  # broadcast to everyone in the current topic (wildcard:lobby).
-  @impl true
-  def handle_in("shout", payload, socket) do
-    broadcast(socket, "shout", payload)
-    {:noreply, socket}
-  end
-
   # Add authorization logic here as required.
-  defp authorized?(_payload) do
-    true
-  end
+  # defp authorized?(_payload) do
+  #   true
+  # end
 end

@@ -1,6 +1,6 @@
 // If you want to use Phoenix channels, run `mix help phx.gen.channel`
 // to get started and then uncomment the line below.
-import "./user_socket.js"
+import "./socket.js"
 
 // To summarize, a WS connection follows a request flow:
 // 1. Init GET http(s) request to WS endpoint

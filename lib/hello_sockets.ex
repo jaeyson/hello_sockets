@@ -8,6 +8,6 @@ defmodule HelloSockets do
   """
 
   def request_ping(event, payload) do
-    HelloSocketsWeb.Endpoint.broadcast("ping:req", event, payload)
+    HelloSocketsWeb.Endpoint.broadcast("ping", event, payload)
   end
 end

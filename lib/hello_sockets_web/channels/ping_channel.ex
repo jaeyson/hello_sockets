@@ -28,6 +28,7 @@ defmodule HelloSocketsWeb.PingChannel do
 
   @impl true
   def handle_in("ping", %{"ack_phrase" => ack_phrase}, socket) do
+    IO.inspect("triggered")
     {:reply, {:ok, %{ack_phrase: ack_phrase}}, socket}
   end
 
@@ -39,17 +40,6 @@ defmodule HelloSocketsWeb.PingChannel do
   @impl true
   def handle_in("ping", _payload, socket) do
     {:reply, {:ok, %{ping: "blank"}}, socket}
-  end
-
-  @impl true
-  def handle_in("test_event", payload, socket) do
-    {:reply, {:ok, %{payload: payload}}, socket}
-  end
-
-  @impl true
-  # We only handle ping
-  def handle_in("pong", _payload, socket) do
-    {:noreply, socket}
   end
 
   @impl true
@@ -76,14 +66,20 @@ defmodule HelloSocketsWeb.PingChannel do
   end
 
   @impl true
+  def handle_info("shout", socket) do
+    IO.inspect("triggered")
+    {:noreply, socket}
+  end
+
+  @impl true
   def handle_out("request_ping", payload, socket) do
     payload = Map.put(payload, "from_node", Node.self())
-    push(socket, "send_ping", payload)
+    push(socket, "request_ping", payload)
     {:noreply, socket}
   end
 
   # Add authorization logic here as required.
-  defp authorized?(_payload) do
-    true
-  end
+  # defp authorized?(_payload) do
+  #   true
+  # end
 end
