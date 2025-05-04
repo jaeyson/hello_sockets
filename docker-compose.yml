@@ -1,0 +1,6 @@
+services:
+  statsd:
+    image: docker.io/statsd/statsd
+    container_name: statsd
+    ports:
+      - 8126:8126

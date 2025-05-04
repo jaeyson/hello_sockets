@@ -7,6 +7,8 @@ defmodule HelloSockets.Application do
 
   @impl true
   def start(_type, _args) do
+    :ok = HelloSockets.Statix.connect()
+
     children = [
       HelloSocketsWeb.Telemetry,
       {DNSCluster, query: Application.get_env(:hello_sockets, :dns_cluster_query) || :ignore},

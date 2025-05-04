@@ -85,3 +85,34 @@ Let’s break down each of these fields and their use in the Channel flow:
 - `Topic`: The topic of the Channel.
 - `Event`: A string identifying the message. The Channel implementation can use pattern matching to handle different events easily.
 - `Payload`: A JSON encoded map (string) that contains the data contents of the message. The Channel implementation can use pattern matching on the decoded map to handle different cases for an event.
+
+## `StatsD` not working
+
+### problem
+
+`Statix` library isn't compatible with newer OTP versions
+
+```bash
+iex(1)> HelloSockets.Statix.increment("test", 1)
+[error] HelloSockets.Statix counter metric "test" lost value 1 due to port closure
+{:error, :port_closed}
+```
+
+- [Reddit](https://www.reddit.com/r/elixir/comments/1i9jvhg/help_with_statix_library_port_closed_error_when/?rdt=64795)
+- [Github thread](https://github.com/lexmag/statix/pull/72)
+
+### solution
+
+Might as well use a [fork version](https://github.com/knocklabs/statix):
+
+```elixir
+defp deps do
+  [
+    ...
+    {:statix, git: "git@github.com:knocklabs/statix.git"},
+    ...
+  ]
+end
+```
+
+And also, don't forget to run a statsd container.

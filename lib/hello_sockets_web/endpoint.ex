@@ -11,6 +11,10 @@ defmodule HelloSocketsWeb.Endpoint do
     same_site: "Lax"
   ]
 
+  socket "/stats_socket", HelloSocketsWeb.StatsSocket,
+    websocket: true,
+    longpoll: false
+
   socket "/auth_socket", HelloSocketsWeb.AuthSocket,
     websocket: true,
     longpoll: false

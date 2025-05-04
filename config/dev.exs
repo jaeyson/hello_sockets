@@ -8,6 +8,9 @@ import Config
 # to bundle .js and .css sources.
 port = String.to_integer(System.get_env("PORT") || "4000")
 
+config :statsd_logger, port: 8126
+config :statix, HelloSockets.Statix, port: 8126
+
 config :hello_sockets, HelloSocketsWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
