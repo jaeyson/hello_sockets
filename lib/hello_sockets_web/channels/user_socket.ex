@@ -8,6 +8,7 @@ defmodule HelloSocketsWeb.UserSocket do
 
   channel "ping", HelloSocketsWeb.PingChannel
   channel "wild:*", HelloSocketsWeb.WildcardChannel
+  channel "dupe", HelloSocketsWeb.DedupeChannel
 
   ## Channels
   # Uncomment the following line to define a "room:*" topic
