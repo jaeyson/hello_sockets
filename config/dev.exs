@@ -6,22 +6,17 @@ import Config
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we can use it
 # to bundle .js and .css sources.
-port = String.to_integer(System.get_env("PORT") || "4000")
-
-config :statsd_logger, port: 8126
-config :statix, HelloSockets.Statix, port: 8126
-
 config :hello_sockets, HelloSocketsWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
-  http: [ip: {127, 0, 0, 1}, port: port],
+  http: [ip: {127, 0, 0, 1}, port: String.to_integer(System.get_env("PORT") || "4000")],
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
-  secret_key_base: "1TUCygb80NOOgD731MNf3RiA62t9Ar8c2f+giIpG3wfLAFftdo5JTwQzWihk0b3O",
+  secret_key_base: "4Uw5AuRW8Q7iSQmJyMh60xXGxaD/SFmA8ozyVBnVYeTNN3AjKw1CZPzt+rPwoF5F",
   watchers: [
-    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
-    tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
+    esbuild: {Esbuild, :install_and_run, [:hello_sockets, ~w(--sourcemap=inline --watch)]},
+    tailwind: {Tailwind, :install_and_run, [:hello_sockets, ~w(--watch)]}
   ]
 
 # ## SSL Support
@@ -50,10 +45,11 @@ config :hello_sockets, HelloSocketsWeb.Endpoint,
 # Watch static and templates for browser reloading.
 config :hello_sockets, HelloSocketsWeb.Endpoint,
   live_reload: [
+    web_console_logger: true,
     patterns: [
-      ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
+      ~r"priv/static/(?!uploads/).*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/hello_sockets_web/(controllers|live|components)/.*(ex|heex)$"
+      ~r"lib/hello_sockets_web/(?:controllers|live|components|router)/?.*\.(ex|heex)$"
     ]
   ]
 
@@ -61,7 +57,7 @@ config :hello_sockets, HelloSocketsWeb.Endpoint,
 config :hello_sockets, dev_routes: true
 
 # Do not include metadata nor timestamps in development logs
-config :logger, :console, format: "[$level] $message\n"
+config :logger, :default_formatter, format: "[$level] $message\n"
 
 # Set a higher stacktrace during development. Avoid configuring such
 # in production as building large stacktraces may be expensive.
@@ -70,8 +66,12 @@ config :phoenix, :stacktrace_depth, 20
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
 
-# Include HEEx debug annotations as HTML comments in rendered markup
-config :phoenix_live_view, :debug_heex_annotations, true
+config :phoenix_live_view,
+  # Include HEEx debug annotations as HTML comments in rendered markup.
+  # Changing this configuration will require mix clean and a full recompile.
+  debug_heex_annotations: true,
+  # Enable helpful, but potentially expensive runtime checks
+  enable_expensive_runtime_checks: true
 
 # Disable swoosh api client as it is only required for production adapters.
 config :swoosh, :api_client, false

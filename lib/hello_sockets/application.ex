@@ -7,14 +7,10 @@ defmodule HelloSockets.Application do
 
   @impl true
   def start(_type, _args) do
-    :ok = HelloSockets.Statix.connect()
-
     children = [
       HelloSocketsWeb.Telemetry,
       {DNSCluster, query: Application.get_env(:hello_sockets, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: HelloSockets.PubSub},
-      # Start the Finch HTTP client for sending emails
-      {Finch, name: HelloSockets.Finch},
       # Start a worker by calling: HelloSockets.Worker.start_link(arg)
       # {HelloSockets.Worker, arg},
       # Start to serve requests, typically the last entry

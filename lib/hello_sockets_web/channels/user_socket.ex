@@ -6,15 +6,11 @@ defmodule HelloSocketsWeb.UserSocket do
   # It's possible to control the websocket connection and
   # assign values that can be accessed by your channel topics.
 
-  channel "ping", HelloSocketsWeb.PingChannel
-  channel "wild:*", HelloSocketsWeb.WildcardChannel
-  channel "dupe", HelloSocketsWeb.DedupeChannel
-
   ## Channels
   # Uncomment the following line to define a "room:*" topic
   # pointing to the `HelloSocketsWeb.RoomChannel`:
   #
-  # channel "room:*", HelloSocketsWeb.RoomChannel
+  channel "room:*", HelloSocketsWeb.RoomChannel
   #
   # To create a channel file, use the mix task:
   #
@@ -30,7 +26,7 @@ defmodule HelloSocketsWeb.UserSocket do
   #
   #     {:ok, assign(socket, :user_id, verified_user_id)}
   #
-  # To deny connection, return `:error` or `{:error, term}`. To control the
+  # To deny connection, return `:error` or `{:error, term}`
   # response the client receives in that case, [define an error handler in the
   # websocket
   # configuration](https://hexdocs.pm/phoenix/Phoenix.Endpoint.html#socket/3-websocket-configuration).
@@ -42,7 +38,7 @@ defmodule HelloSocketsWeb.UserSocket do
     {:ok, socket}
   end
 
-  # Socket id's are topics that allow you to identify all sockets for a given user:
+  # Socket IDs are topics that allow you to identify all sockets for a given user:
   #
   #     def id(socket), do: "user_socket:#{socket.assigns.user_id}"
   #
