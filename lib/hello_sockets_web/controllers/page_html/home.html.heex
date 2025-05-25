@@ -200,3 +200,9 @@
     </div>
   </div>
 </div>
+<script>
+  // It would be good practice, if every page required it, to place
+  // the token generation in a Plug that is placed in the pipeline for every request.
+  window.authToken = "<%= assigns[:auth_token] %>"
+  window.userId = "<%= assigns[:user_id] %>"
+</script>
