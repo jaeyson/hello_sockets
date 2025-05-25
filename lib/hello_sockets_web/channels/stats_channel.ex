@@ -19,8 +19,19 @@ defmodule HelloSocketsWeb.StatsChannel do
   end
 
   def handle_in("slow_ping", _payload, socket) do
-    Process.sleep(3_00)
+    Process.sleep(3_000)
     {:reply, {:ok, %{ping: "pong"}}, socket}
+  end
+
+  def handle_in("parallel_slow_ping", _payload, socket) do
+    ref = socket_ref(socket)
+
+    Task.start_link(fn ->
+      Process.sleep(:timer.seconds(3))
+      reply(ref, {:ok, %{ping: "pong"}})
+    end)
+
+    {:noreply, socket}
   end
 
   defp channel_join_increment(status) do

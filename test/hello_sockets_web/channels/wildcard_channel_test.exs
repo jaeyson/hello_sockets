@@ -26,8 +26,11 @@ defmodule HelloSocketsWeb.WildcardChannelTest do
 
   describe "join/3 error causing crash" do
     test "error with an invalid format topic" do
-      assert socket(UserSocket, nil, %{}) |> subscribe_and_join("wild:invalid", %{}) ==
-               {:error, %{}}
+      assert capture_log(fn ->
+               UserSocket
+               |> socket(nil, %{})
+               |> subscribe_and_join("wild:invalid", %{}) == {:error, %{}}
+             end)
     end
   end
 

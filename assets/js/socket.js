@@ -13,6 +13,20 @@ for (let i = 0; i < 5; i++) {
   statsChannelValid.push("ping");
 }
 
+const fastStatsSocket = new Socket("/stats_socket", {})
+fastStatsSocket.connect()
+
+const fastStatsChannel = fastStatsSocket.channel("valid")
+fastStatsChannel.join()
+
+for (let i = 0; i < 5; i++) {
+  fastStatsChannel
+    .push("parallel_slow_ping")
+    .receive("ok", () => console.log("Parallel slow ping response", i))
+}
+
+console.log("5 parallel slow pings requested")
+
 const slowStatsSocket = new Socket("/stats_socket", {});
 slowStatsSocket.connect();
 

@@ -1,7 +1,6 @@
 defmodule HelloSocketsWeb.AuthSocketTest do
   use HelloSocketsWeb.ChannelCase
   import ExUnit.CaptureLog
-  alias HelloSocketsWeb.AuthSocketTest
   alias HelloSocketsWeb.AuthSocket
 
   defp generate_token(id, opts \\ []) do

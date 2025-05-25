@@ -10,6 +10,7 @@ defmodule HelloSocketsWeb.DedupeChannel do
   def handle_out("number", %{number: number}, socket) do
     buffer = Map.get(socket.assigns, :buffer, [])
     next_buffer = [number | buffer]
+    dbg(next_buffer)
 
     socket =
       socket

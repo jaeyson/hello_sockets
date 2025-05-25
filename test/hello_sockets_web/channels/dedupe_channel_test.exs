@@ -11,7 +11,7 @@ defmodule HelloSocketsWeb.Channels.DedupeChannelTest do
     |> broadcast_number(2)
     |> validate_buffer_contents([2, 1, 1])
 
-    refute_push _, _
+    refute_push _event, _payload
   end
 
   test "the buffer is drained 1 second after a number is first added" do
@@ -59,7 +59,7 @@ defmodule HelloSocketsWeb.Channels.DedupeChannelTest do
   end
 
   defp connect() do
-    assert {:ok, _, socket} = socket(UserSocket, nil, %{}) |> subscribe_and_join("dupe", %{})
+    assert {:ok, _reply, socket} = socket(UserSocket, nil, %{}) |> subscribe_and_join("dupe", %{})
     socket
   end
 end
