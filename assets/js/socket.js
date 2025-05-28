@@ -10,6 +10,20 @@ authSocket.connect()
 
 socket.connect()
 
+const recurringChannel = authSocket.channel("recurring")
+recurringChannel.on("new_token", payload => {
+  console.info("received new auth token:", payload)
+})
+
+recurringChannel.join()
+
+const dedupeChannel = socket.channel("dupe")
+dedupeChannel.on("number", payload => {
+  console.info("dedupe: ", payload)
+})
+
+dedupeChannel.join()
+
 const channel = socket.channel("ping")
 
 channel.join()

@@ -3,8 +3,6 @@ defmodule HelloSocketsWeb.RoomChannel do
 
   @impl true
   def join("room:lobby", payload, socket) do
-    dbg(payload)
-
     if authorized?(payload) do
       {:ok, socket}
     else

@@ -5,7 +5,7 @@ defmodule HelloSocketsWeb.RoomChannelTest do
     {:ok, _, socket} =
       HelloSocketsWeb.UserSocket
       |> socket("user_id", %{some: :assign})
-      |> subscribe_and_join(HelloSocketsWeb.RoomChannel, "room:lobby")
+      |> subscribe_and_join(HelloSocketsWeb.RoomChannel, "room:lobby", %{"hello" => "world"})
 
     %{socket: socket}
   end

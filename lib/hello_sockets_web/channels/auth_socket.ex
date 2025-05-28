@@ -5,6 +5,7 @@ defmodule HelloSocketsWeb.AuthSocket do
   channel "ping", HelloSocketsWeb.PingChannel
   channel "tracker", HelloSocketsWeb.TrackedChannel
   channel "user:*", HelloSocketsWeb.AuthChannel
+  channel "recurring", HelloSocketsWeb.RecurringChannel
 
   @one_day :timer.hours(24)
 

@@ -10,9 +10,10 @@ defmodule HelloSocketsWeb.UserSocket do
   # Uncomment the following line to define a "room:*" topic
   # pointing to the `HelloSocketsWeb.RoomChannel`:
   #
-  # channel "room:*", HelloSocketsWeb.RoomChannel
+  channel "room:*", HelloSocketsWeb.RoomChannel
   channel "ping", HelloSocketsWeb.PingChannel
   channel "wild:*", HelloSocketsWeb.WildcardChannel
+  channel "dupe", HelloSocketsWeb.DedupeChannel
   #
   # To create a channel file, use the mix task:
   #

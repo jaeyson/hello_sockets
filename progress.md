@@ -15,8 +15,17 @@ To summarize, a WebSocket connection follows this request flow:
 > A connection cannot be upgraded with cURL, so we’ll move back to DevTools for seeing the data exchange.
 
 > [!NOTE]
-> reader's perspective:
-> endpoint -> user_socket.js -> UserSocket.connect/3 -> RoomChannel.join/3
+> reader's perspective
+> |
+> └──> app.js
+>      |
+>      └──> user_socket.js
+>           |
+>           └──> endpoint.ex
+>                |
+>                └──> user_socket.ex (UserSocket.connect/3)
+>                     |
+>                     └──> room_channel.ex (RoomChannel.join/3)
 
 ## Long polling
 
@@ -253,6 +262,17 @@ see:
 >  When you are writing a system that has separate real-time features or pages for users and admins, you would add a new Socket. This is because users would not have the ability to connect to admin-specific features and so should be rejected from connecting to the Socket. Separating the Socket authentication like this leads to simpler code further down in the system. You would add to an existing Socket when the authentication needs are the same.
 >
 > As a general rule of thumb, use multiple Channels with a single Socket. Use multiple Sockets if your application has different authentication needs between different parts of the application. This approach leads to a system architecture with the lowest resource usage.
+
+## Unreliable connections
+
+> [!NOTE]
+> At page 68
+
+- A client’s internet connection becomes unstable and drops their connection without any other changes.
+- A bug in the client code causes it to close the connection.
+- The server restarts due to a routine deploy or operational issue.
+
+
 
 
 
