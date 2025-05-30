@@ -12,7 +12,7 @@ defmodule HelloSocketsWeb.WildcardChannel do
   end
 
   def handle_in("ping", _payload, socket) do
-    {:reply, {:ok, "pong"}, socket}
+    {:reply, {:ok, %{ping: "pong"}}, socket}
   end
 
   defp numbers_correct?(numbers) do

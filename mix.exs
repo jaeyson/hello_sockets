@@ -55,7 +55,10 @@ defmodule HelloSockets.MixProject do
       {:gettext, "~> 0.26"},
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
-      {:bandit, "~> 1.5"}
+      {:bandit, "~> 1.5"},
+      {:statix, git: "git@github.com:knocklabs/statix.git"},
+      {:statsd_logger, "~> 1.1", only: [:dev, :test]},
+      {:gen_stage, "~> 1.0"}
     ]
   end
 

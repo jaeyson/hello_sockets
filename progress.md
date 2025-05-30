@@ -272,6 +272,23 @@ see:
 - A bug in the client code causes it to close the connection.
 - The server restarts due to a routine deploy or operational issue.
 
+## Measure data pipeline
+
+> Users perspective
+
+1. in `application.ex`, it describes the producer/consumer_supervisor children.
+2. starts `iex -S mix`
+```elixir
+alias HelloSockets.Pipeline.Producer
+push = &Producer.push_timed(%{data: %{n: &1}, user_id: 1})
+Enum.each((1..1), push)
+```
+3. After using `push` function inside `Enum.each/2`, `Worker` (from `ConsumerSupervisor`) starts running.
+4. It picks up the event `%{item: item, enqueued_at: unix_ms}`
+5. `Worker`: broadcasts the payload in the channel (`auth_channel`)
+6. `auth_channel`: intercepts the event before sending to client. Here it measures the time difference from calling `Producer.push_timed/1` to the moment it sends the event to client.
+
+
 
 
 

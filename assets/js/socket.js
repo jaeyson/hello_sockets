@@ -1,5 +1,43 @@
 import {Socket} from "phoenix"
 
+const fastSocket = new Socket("/stats_socket", {})
+fastSocket.connect()
+
+const fastStatsChannel = fastSocket.channel("valid")
+fastStatsChannel.join()
+
+for (let f = 0; f < 5; f++) {
+  fastStatsChannel.push("parallel_slow_ping")
+    .receive("ok", _ => console.warn("Parallel slow ping response received", f))
+}
+console.info("5 parallel slow pings requested")
+
+const slowStatsSocket = new Socket("/stats_socket", {})
+slowStatsSocket.connect()
+
+const slowStatsChannel = slowStatsSocket.channel("valid")
+slowStatsChannel.join()
+
+for (let s = 0; s < 5; s++) {
+  slowStatsChannel.push("slow_ping")
+    .receive("ok", _ => console.warn("Slow ping response received", s))
+}
+console.info("5 slow pings requested")
+
+const statsSocket = new Socket("/stats_socket", {})
+statsSocket.connect()
+
+const statsChannelInvalid = statsSocket.channel("invalid")
+statsChannelInvalid.join()
+  .receive("error", _ => statsChannelInvalid.leave())
+
+const statsChannelValid = statsSocket.channel("valid")
+statsChannelValid.join()
+
+for (let i = 0; i < 5; i++) {
+  statsChannelValid.push("ping")
+}
+
 const socket = new Socket("/socket", {})
 const authSocket = new Socket("/auth_socket", {
   params: {token: window.authToken}
@@ -9,6 +47,16 @@ authSocket.onOpen(_ => console.info("authSocket connected"))
 authSocket.connect()
 
 socket.connect()
+
+const authUserChannel = authSocket.channel(`user:${window.userId}`)
+// authUserChannel.on("push", payload => {
+//   console.info("received auth user push", payload)
+// })
+authUserChannel.on("push_timed", payload => {
+  console.info("received timed auth user push", payload)
+})
+
+authUserChannel.join()
 
 const recurringChannel = authSocket.channel("recurring")
 recurringChannel.on("new_token", payload => {

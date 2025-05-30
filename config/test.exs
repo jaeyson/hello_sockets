@@ -7,6 +7,9 @@ config :hello_sockets, HelloSocketsWeb.Endpoint,
   secret_key_base: "aQFXo7l+LxmvjVUMKBg9LXNi9SfUXbqo4T6CmuJDJzpp2Dsb5vMJq+Wb2gP81d5+",
   server: false
 
+# config :statsd_logger, port: 8127
+config :statix, HelloSockets.Statix, port: 8127
+
 # In test we don't send emails
 config :hello_sockets, HelloSockets.Mailer, adapter: Swoosh.Adapters.Test
 
