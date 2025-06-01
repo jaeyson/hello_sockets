@@ -49,6 +49,7 @@ authSocket.connect()
 socket.connect()
 
 const authUserChannel = authSocket.channel(`user:${window.userId}`)
+// no metrics
 // authUserChannel.on("push", payload => {
 //   console.info("received auth user push", payload)
 // })

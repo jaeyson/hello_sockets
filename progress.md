@@ -16,16 +16,19 @@ To summarize, a WebSocket connection follows this request flow:
 
 > [!NOTE]
 > reader's perspective
-> |
-> └──> app.js
->      |
->      └──> user_socket.js
->           |
->           └──> endpoint.ex
->                |
->                └──> user_socket.ex (UserSocket.connect/3)
->                     |
->                     └──> room_channel.ex (RoomChannel.join/3)
+
+```
+|
+└──> app.js
+    |
+    └──> user_socket.js
+         |
+         └──> endpoint.ex
+              |
+              └──> user_socket.ex (UserSocket.connect/3)
+                   |
+                   └──> room_channel.ex (RoomChannel.join/3)
+```
 
 ## Long polling
 
@@ -64,7 +67,8 @@ The distinction between Channels and Sockets may not be obvious at a glance.
 A Socket’s responsibilities involve connection handling and routing of requests
 to the correct Channel. A Channel’s responsibilities involve handling requests
 from a client and sending data to a client. In this way, a Channel is similar
-to a Controller in the MVC (Model-View-Controller) design pattern.
+to a Controller in the MVC (Model-View-Controller) design pattern and Socket
+is like the router.
 
 
 ## [Socket fields](https://hexdocs.pm/phoenix/Phoenix.Socket.html#module-socket-fields)
@@ -92,12 +96,16 @@ to a Controller in the MVC (Model-View-Controller) design pattern.
 
 `join/3` (`join(topic, payload, socket)`) is for joining a `topic` or `topic:subtopic` in a channel.
 
-`handle_in/3` (`handle_in(event, payload, socket)`) is to process request after successfully joining a topic.
+`join/3` callback is triggered when in e.g. `socket.js` is doing `channel.join()`.
+
+`handle_in/3` (`handle_in(event, payload, socket)`) is to process request after successfully joining a topic. 
+
+`handle_in/3` callback is triggered when in e.g. `socket.js` is doing `channel.push("EVENT_NAME", payload)`.
 
 when a message received, either:
 
 - Reply to the message by returning `{:reply, {:ok, payload}, Phoenix.Socket}`. The payload could be `map() | term() | {:binary, binary()}`.
-- Do not reply to the message by returning `{:noreply, Phoenix.Socket}`.
+- Do not reply to the message by returning `{:noreply, Phoenix.Socket}`. This will result in timeouts.
 - Disconnect the Channel by returning `{:stop, reason, Phoenix.Socket}`.
 
 ## What happens when we send an error?
@@ -208,9 +216,9 @@ Any Channel client has a few key responsibilities that should be followed, in or
 HelloSocketsWeb.Endpoint.broadcast("ping", "request_ping", %{})
 ```
 
-Where `request_ping` is the event name for `handle_out/3` and push via `push(socket, "send_ping", payload)`.
+Where `request_ping` is the event name for `handle_out/3`. Since it doesn't have `{:reply, ...}`, in order to push, we use `push(socket, "send_ping", payload)` to send message to client.
 
-Clients whose the recipient should use `channel.on("send_ping", payload => ...)`.
+On client e.g. `socket.js`, in order to receive the message from server, one would use `channel.on("send_ping", payload => ...)`.
 
 ## Simple authorization
 
@@ -223,7 +231,7 @@ or when a client joins a Channel.
 ```elixir
 iex> user_id = 1
 1
-iex>Phoenix.Token.sign(HelloSocketsWeb.Endpoint,"salt identifier", user_id)
+iex> Phoenix.Token.sign(HelloSocketsWeb.Endpoint,"salt identifier", user_id)
 "SFMyNTY.g2gDYQFuBgDIm9cHlwFiAAFRgA.W6IwvEFyxeWVL7o8JDZjsVqXZu_DW3keclDJdOM5AEc"
 ```
 
@@ -231,21 +239,21 @@ iex>Phoenix.Token.sign(HelloSocketsWeb.Endpoint,"salt identifier", user_id)
 wscat -c 'ws://localhost:4000/auth_socket/websocket?vsn=2.0.0&token=SF...AEc'
 connected (press CTRL+C to quit)
 > ["1","1","user:2","phx_join",{}]
-< ["1","1","user:2","phx_reply",{"response":
-{"reason":"unauthorized"},"status":"error"}]
+< ["1","1","user:2","phx_reply",{"response": {"reason":"unauthorized"},"status":"error"}]
+
 > ["1","1","user:1","phx_join",{}]
 < ["1","1","user:1","phx_reply",{"response":{},"status":"ok"}]
 ```
 
-> [!INFO]
+> [!NOTE]
 > this approach is cumbersome, as it sends auth token with each topic join
 
-### pass via socket connection
+### passing via socket connection
 
 This task boils down to a few key parts:
--  Controller—generate a token when our page loads and write it into the page's JavaScript
--  JavaScript—send the token parameter with the Socket connection
--  Socket—use the token in our Socket
+-  Controller: generate a token when our page loads, then write it into the page's JavaScript.
+-  JavaScript: get the token from page (`window.userId`), send the token parameter with the Socket connection.
+-  Socket: use the token in our Socket.
 
 see:
 
@@ -255,7 +263,7 @@ see:
 
 ## Cost of sockets vs channels
 
-> [!INFO]
+> [!NOTE]
 > Each connected Socket adds one connection to the server, but each connected Channel adds zero new connections to the server. Channels do take up a slight amount of memory and CPU because there is a process associated with each, but you can consider Channels nearly free because processes are cheap in Elixir. Sockets are a bit more expensive due to network connections and the heartbeat process.
 
 > [!NOTE]
