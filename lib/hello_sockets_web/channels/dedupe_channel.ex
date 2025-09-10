@@ -3,18 +3,16 @@ defmodule HelloSocketsWeb.DedupeChannel do
 
   intercept ["number"]
 
-  def join(_topic, _channel, socket) do
+  def join(_topic, _payload, socket) do
     {:ok, socket}
   end
 
   def handle_out("number", %{number: number}, socket) do
     buffer = Map.get(socket.assigns, :buffer, [])
-    next_buffer = [number | buffer]
-    dbg(next_buffer)
 
     socket =
       socket
-      |> assign(:buffer, next_buffer)
+      |> assign(:buffer, [number | buffer])
       |> enqueue_send_buffer()
 
     {:noreply, socket}
@@ -35,9 +33,11 @@ defmodule HelloSocketsWeb.DedupeChannel do
   end
 
   def broadcast(numbers, times) do
-    Enum.each(1..times, fn _ ->
+    Enum.each(1..times, fn _n ->
       Enum.each(numbers, fn number ->
-        HelloSocketsWeb.Endpoint.broadcast!("dupe", "number", %{number: number})
+        HelloSocketsWeb.Endpoint.broadcast!("dupe", "number", %{
+          number: number
+        })
       end)
     end)
   end

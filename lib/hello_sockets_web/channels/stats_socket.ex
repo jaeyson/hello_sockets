@@ -11,5 +11,7 @@ defmodule HelloSocketsWeb.StatsSocket do
     {:ok, socket}
   end
 
-  def id(_socket), do: nil
+  def id(_socket) do
+    nil
+  end
 end

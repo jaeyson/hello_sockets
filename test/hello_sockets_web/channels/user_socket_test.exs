@@ -2,10 +2,8 @@ defmodule HelloSocketsWeb.UserSocketTest do
   use HelloSocketsWeb.ChannelCase
   alias HelloSocketsWeb.UserSocket
 
-  describe "connect/3" do
-    test "can be connected to without parameters" do
-      assert {:ok, %Phoenix.Socket{}} = connect(UserSocket, %{})
-    end
+  test "can be connected to without parameters" do
+    assert {:ok, %Phoenix.Socket{}} = connect(UserSocket, %{})
   end
 
   describe "id/1" do

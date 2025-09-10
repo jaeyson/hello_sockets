@@ -7,11 +7,7 @@ defmodule HelloSocketsWeb.PageController do
     conn
     |> assign(:auth_token, generate_auth_token(conn, fake_user_id))
     |> assign(:user_id, fake_user_id)
-    |> render(:index)
-
-    # The home page is often custom made,
-    # so skip the default app layout.
-    # render(conn, :home, layout: false)
+    |> render(:home)
   end
 
   defp generate_auth_token(conn, user_id) do

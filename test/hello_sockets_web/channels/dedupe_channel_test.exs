@@ -1,4 +1,4 @@
-defmodule HelloSocketsWeb.Channels.DedupeChannelTest do
+defmodule HelloSocketsWeb.DedupeChannelTest do
   use HelloSocketsWeb.ChannelCase
   alias HelloSocketsWeb.UserSocket
 
@@ -11,7 +11,7 @@ defmodule HelloSocketsWeb.Channels.DedupeChannelTest do
     |> broadcast_number(2)
     |> validate_buffer_contents([2, 1, 1])
 
-    refute_push _event, _payload
+    refute_push _, _
   end
 
   test "the buffer is drained 1 second after a number is first added" do
@@ -44,22 +44,28 @@ defmodule HelloSocketsWeb.Channels.DedupeChannelTest do
             ]} = Process.info(self(), :messages)
   end
 
+  defp connect do
+    assert {:ok, _reply, socket} =
+             UserSocket
+             |> socket(nil, %{})
+             |> subscribe_and_join("dupe", %{})
+
+    socket
+  end
+
   defp broadcast_number(socket, number) do
     assert broadcast_from!(socket, "number", %{number: number}) == :ok
     socket
   end
 
   defp validate_buffer_contents(socket, expected_contents) do
+    # We use :sys.get_state/1 to retrieve the contents of our
+    # Channel.Server process that is created by the test helper.
     assert :sys.get_state(socket.channel_pid).assigns == %{
              awaiting_buffer?: true,
              buffer: expected_contents
            }
 
-    socket
-  end
-
-  defp connect() do
-    assert {:ok, _reply, socket} = socket(UserSocket, nil, %{}) |> subscribe_and_join("dupe", %{})
     socket
   end
 end
